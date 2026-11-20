@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AnyTone Web CPS — RDT Lab & CSV Workbench</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#e8eef7;background:#0d1420}*{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}.side{background:#101c2d;border-right:1px solid #29374c;padding:22px 15px}.brand{font-size:20px;font-weight:750;letter-spacing:-.5px}.sub{font-size:12px;color:#8ea1b9;margin:6px 0 24px}.group{color:#94a9bf;text-transform:uppercase;font-size:11px;letter-spacing:1.2px;margin:18px 8px 8px}.dataset{display:flex;justify-content:space-between;align-items:center;width:100%;padding:9px 10px;background:transparent;border:0;color:#c8d5e6;text-align:left;border-radius:9px;gap:7px}.dataset:hover,.dataset.active{background:#213853;color:#fff}.dataset .count{font-size:11px;color:#89d3cb}.main{min-width:0;padding:26px;max-width:1600px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}h1{font-size:26px;margin:0}h2{font-size:17px;margin:0}.muted{color:#9cb0c7}.intro{margin-top:6px;font-size:13px}.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{background:#21334b;color:#f4f8ff;border:1px solid #39516d;border-radius:9px;padding:9px 13px;font-size:13px;font-weight:600}.btn.primary{background:#30b0a0;color:#061a20;border-color:#30b0a0}.btn.danger{color:#ffc1c1}.btn:hover{filter:brightness(1.15)}.notice{border:1px solid #4e4435;background:#241e18;color:#f0d5a8;border-radius:10px;padding:12px 15px;font-size:13px;margin:20px 0}.metrics{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.metric{background:#152237;border:1px solid #283d58;border-radius:11px;min-width:125px;padding:13px 16px}.metric b{display:block;font-size:23px;margin-bottom:3px}.metric small{color:#91a8bf}.panel{border:1px solid #2b3d53;background:#121d2d;border-radius:12px;overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:15px;border-bottom:1px solid #2b3d53}.search{background:#0b1522;color:white;border:1px solid #38516e;border-radius:8px;padding:10px;width:min(100%,330px)}.tablewrap{overflow:auto;max-height:480px}table{border-collapse:collapse;width:100%;font-size:12px;text-align:left}th,td{border-bottom:1px solid #25374a;padding:10px 12px;white-space:nowrap;max-width:300px;overflow:hidden;text-overflow:ellipsis}th{position:sticky;top:0;background:#203248;color:#b8c9dc;z-index:1}tbody tr{cursor:pointer}tbody tr:hover{background:#21334b}.foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:13px;color:#9fb1c5;font-size:12px}.empty{padding:50px 20px;text-align:center;color:#96a8bd}.edit{margin-top:17px;padding:18px}.editHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:13px}.field{display:flex;flex-direction:column;gap:6px;font-size:11px;color:#adbed0}.field input,.field textarea{background:#0d1725;border:1px solid #36506a;color:#e8f1fb;border-radius:7px;padding:9px;min-width:0;width:100%;font-size:12px}.field textarea{min-height:75px;resize:vertical}.hidden{display:none!important}.status{font-size:12px;color:#a9c7c3;margin:14px 0}.small{font-size:12px}.side-foot{color:#849bb2;font-size:11px;line-height:1.6;margin:24px 8px}.mobiletabs{display:none}@media(max-width:730px){.app{display:block}.side{border:0;border-bottom:1px solid #29374c;padding:14px}.side .group,.side #catalog,.side-foot{display:none}.brand{font-size:18px}.sub{margin:3px 0 0}.main{padding:13px}h1{font-size:22px}.mobiletabs{display:block;width:100%;padding:10px;background:#1b3048;color:white;border:1px solid #35506b;border-radius:8px}.metrics{gap:7px}.metric{flex:1;min-width:88px;padding:10px}.metric b{font-size:18px}}
+</style></head><body>
+<div class="app"><aside class="side"><div class="brand">◉ AnyTone Web CPS</div><div class="sub">D878UVII • RDT lab • alpha</div><div class="group">Imported sections</div><select id="mobiletabs" class="mobiletabs" aria-label="Choose imported section"></select><div id="catalog"></div><div class="side-foot">Local-only editing. Files remain in this browser session. Save your changes by exporting.</div></aside>
+<main class="main"><div class="top"><div><h1 id="heading">Codeplug Workspace</h1><p class="intro muted" id="subtitle">Import CPS 4.00 CSV exports to begin editing.</p></div><div class="actions"><button class="btn primary" id="rdtOpen">Open .RDT</button><button class="btn" id="import">Import CSV files</button><button class="btn" id="export" disabled>Export current CSV</button><button class="btn" id="exportAll" disabled>Export all CSVs</button></div></div>
+<div class="notice"><strong>Experimental RDT support:</strong> You can inspect and patch bytes in a copy of an RDT. This is a raw binary editor, NOT yet a validated channel/zone/APRS serializer. Do not load modified RDTs into a radio until the format and changes are independently verified. USB programming is disabled.</div>
+<div class="metrics"><div class="metric"><b id="fileCount">0</b><small>CSV sections</small></div><div class="metric"><b id="recordCount">0</b><small>Records in section</small></div><div class="metric"><b id="fieldCount">0</b><small>Fields in section</small></div><div class="metric"><b id="changeCount">0</b><small>Edited sections</small></div></div>
+<section class="panel"><div class="panel-head"><div><h2 id="tableTitle">No CSV imported</h2><div class="small muted" id="tableCaption">All original columns are retained.</div></div><div class="actions"><input type="search" id="search" class="search" placeholder="Search section..." aria-label="Search records" disabled><button class="btn" id="add" disabled>Add record</button></div></div><div class="tablewrap"><table id="table"><thead id="thead"></thead><tbody id="tbody"></tbody></table><div class="empty" id="empty">Use <strong>Import CSV files</strong> to select the AnyTone exports from your computer. You can select multiple files at once.</div></div><div class="foot"><span id="pageInfo">Nothing loaded</span><div class="actions"><button class="btn" id="prev" disabled>Previous</button><button class="btn" id="next" disabled>Next</button></div></div></section>
+<section class="panel edit hidden" id="editor"><div class="editHead"><div><h2>Edit record</h2><span class="muted small">Changes stay in memory until CSV export.</span></div><div class="actions"><button class="btn danger" id="remove">Delete record</button><button class="btn" id="close">Close editor</button></div></div><div class="fields" id="fields"></div></section>
+<section class="panel" id="rdtPanel" style="margin-top:17px">
+  <div class="panel-head"><div><h2>RDT Binary Lab <span class="muted small">(experimental)</span></h2><div class="small muted">Open a codeplug, inspect offsets, patch a byte, and save a separate copy. No radio writes.</div></div><div class="actions"><button class="btn" id="rdtUndo" disabled>Undo patch</button><button class="btn" id="rdtSave" disabled>Download patched RDT</button></div></div>
+  <div style="padding:15px;display:grid;gap:12px">
+    <div class="small muted" id="rdtMeta">No RDT opened.</div>
+    <div class="fields">
+      <label class="field">Go to offset (hex, e.g. 0x1000)<input id="rdtOffset" value="0x0" spellcheck="false" /></label>
+      <label class="field">Search bytes (hex separated by spaces)<input id="rdtFind" placeholder="56 31 33 30 33" spellcheck="false" /></label>
+      <label class="field" style="justify-content:end"><span>Controls</span><div class="actions"><button class="btn" id="rdtGo">Show offset</button><button class="btn" id="rdtSearch">Find next</button></div></label>
+    </div>
+    <div style="overflow:auto;max-height:280px"><pre id="rdtHex" style="background:#08111e;border:1px solid #263c56;border-radius:9px;line-height:1.75;font-size:12px;min-width:670px;white-space:pre;padding:13px;color:#dce7f5">Open an .rdt to view its bytes.</pre></div>
+    <div class="fields">
+      <label class="field">Patch offset (hex)<input id="rdtPatchOffset" placeholder="0x1000" spellcheck="false" /></label>
+      <label class="field">Current byte (read-only)<input id="rdtCurrent" readonly value="—" /></label>
+      <label class="field">Replacement byte (2 hex digits)<input id="rdtNew" maxlength="2" placeholder="00" spellcheck="false" /></label>
+      <label class="field" style="justify-content:end"><span>Byte patch</span><button class="btn danger" id="rdtPatch" disabled>Apply one-byte patch</button></label>
+    </div>
+    <label style="font-size:12px;display:flex;align-items:center;gap:8px"><input type="checkbox" id="rdtAck"> I understand that arbitrary byte edits may corrupt this codeplug, and I will validate the resulting file before attempting radio programming.</label>
+    <div class="small muted" id="rdtHistory">0 bytes changed. The original loaded file is never overwritten.</div>
+  </div>
+</section>
+<div class="status" id="status" aria-live="polite">Ready. Data is processed locally in the browser.</div><input id="rdtFile" type="file" accept=".rdt,.RDT,application/octet-stream" hidden><input id="files" type="file" accept=".csv,text/csv" multiple hidden></main></div>
+<script>
+'use strict';
+// Each dataset uses the exact original CSV column titles and order. No .rdt serializer is present.
+const state={sets:new Map(),selected:null,page:0,filter:'',editIndex:null}; const PAGE=75;
+const $=id=>document.getElementById(id); const txt=(el,v)=>{el.textContent=v};
+function parseCSV(text){
+  if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
+  const rows=[];let row=[],field='',quoted=false,atStart=true;
+  for(let i=0;i<text.length;i++){
+    const c=text[i]; if(quoted){if(c==='"'){if(text[i+1]==='"'){field+='"';i++}else quoted=false}else field+=c}
+    else if(c==='"'&&atStart){quoted=true;atStart=false}
+    else if(c===','){row.push(field);field='';atStart=true}
+    else if(c==='\r'||c==='\n'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);if(row.some(x=>x!==''))rows.push(row);row=[];field='';atStart=true}
+    else {field+=c;atStart=false}
+  }
+  if(quoted)throw Error('Unterminated quoted field');
+  if(field.length||row.length){row.push(field);rows.push(row)}
+  if(!rows.length)throw Error('Empty CSV');
+  const header=rows.shift();if(!header.length||header.every(x=>x===''))throw Error('Missing header');
+  const invalid=rows.findIndex(r=>r.length!==header.length);
+  if(invalid!==-1)throw Error(`Row ${invalid+2} has ${rows[invalid].length} fields; expected ${header.length}.`);
+  return {header,rows};
+}
+function csvValue(v){v=String(v??'');return /[",\r\n]/.test(v)?'"'+v.replaceAll('"','""')+'"':v}
+function serialize(set){return '\uFEFF'+[set.header,...set.rows].map(r=>r.map(csvValue).join(',')).join('\r\n')+'\r\n'}
+function download(name,contents){const blob=new Blob([contents],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+function notify(s){txt($('status'),s)}
+async function imports(files){let loaded=0,errors=[];
+  for(const file of files){try{if(!/\.csv$/i.test(file.name)){throw Error('Not a CSV')}if(file.size>60*1024*1024)throw Error('Over 60 MB limit');
+    const parsed=parseCSV(await file.text());state.sets.set(file.name,{...parsed,name:file.name,dirty:false});state.selected=file.name;loaded++;
+  }catch(e){errors.push(file.name+': '+e.message)}}
+  if(loaded){state.page=0;state.filter='';state.editIndex=null;$('search').value='';render()}
+  notify(`${loaded} CSV section(s) imported.`+(errors.length?' Errors: '+errors.join(' • '):''));
+}
+const current=()=>state.sets.get(state.selected);
+function setSelected(name){state.selected=name;state.page=0;state.filter='';state.editIndex=null;$('search').value='';render()}
+function searchableIndexes(set){const term=state.filter.toLowerCase();if(!term)return null;const hits=[];for(let i=0;i<set.rows.length;i++){if(set.rows[i].some(v=>String(v).toLowerCase().includes(term)))hits.push(i)}return hits}
+function render(){const set=current();const catalog=$('catalog'),tabs=$('mobiletabs');catalog.replaceChildren();tabs.replaceChildren();
+  for(const [name,d] of state.sets){const b=document.createElement('button');b.className='dataset'+(name===state.selected?' active':'');const span=document.createElement('span');txt(span,name.replace(/\s*Export(?:\(1\))?\.CSV$/i,'').replace(/\.csv$/i,''));const count=document.createElement('span');count.className='count';txt(count,d.dirty?'● '+d.rows.length:d.rows.length.toLocaleString());b.append(span,count);b.onclick=()=>setSelected(name);catalog.append(b);
+    const opt=document.createElement('option');opt.value=name;txt(opt,name);tabs.append(opt)}
+  tabs.value=state.selected??'';
+  txt($('fileCount'),state.sets.size);txt($('recordCount'),set?set.rows.length.toLocaleString():'0');txt($('fieldCount'),set?set.header.length:'0');txt($('changeCount'),[...state.sets.values()].filter(s=>s.dirty).length);
+  txt($('heading'),set?'Codeplug Workspace':'Codeplug Workspace');txt($('subtitle'),set?set.name+' • imported into this browser session':'Import CPS 4.00 CSV exports to begin editing.');txt($('tableTitle'),set?set.name:'No CSV imported');
+  $('export').disabled=!set;$('exportAll').disabled=!state.sets.size;$('search').disabled=!set;$('add').disabled=!set;
+  if(!set){$('thead').replaceChildren();$('tbody').replaceChildren();$('empty').classList.remove('hidden');$('editor').classList.add('hidden');return}
+  txt($('tableCaption'),`${set.header.length} original columns • ${set.dirty?'Unsaved changes':'Unchanged'} • click row to edit`);
+  const hits=searchableIndexes(set),total=hits?hits.length:set.rows.length;const pages=Math.max(1,Math.ceil(total/PAGE));state.page=Math.min(state.page,pages-1);
+  const idxs=[];for(let i=state.page*PAGE;i<Math.min(total,(state.page+1)*PAGE);i++)idxs.push(hits?hits[i]:i);
+  const visibleFields=Math.min(6,set.header.length);const thead=document.createElement('tr');for(const col of set.header.slice(0,visibleFields)){const th=document.createElement('th');txt(th,col);thead.append(th)}$('thead').replaceChildren(thead);
+  const frag=document.createDocumentFragment();for(const index of idxs){const tr=document.createElement('tr');for(const val of set.rows[index].slice(0,visibleFields)){const td=document.createElement('td');td.title=val;txt(td,val);tr.append(td)}tr.onclick=()=>openEditor(index);frag.append(tr)}$('tbody').replaceChildren(frag);
+  $('empty').classList.toggle('hidden',total>0);if(!total)txt($('empty'),state.filter?'No records match your search.':'No records in this section.');
+  txt($('pageInfo'),total?`${(state.page*PAGE)+1}–${Math.min((state.page+1)*PAGE,total)} of ${total.toLocaleString()} records`:'No records');$('prev').disabled=state.page===0;$('next').disabled=state.page>=pages-1;
+  if(state.editIndex!==null&&state.editIndex<set.rows.length)openEditor(state.editIndex);else $('editor').classList.add('hidden');
+}
+function openEditor(index){state.editIndex=index;const set=current();if(!set)return;const fields=$('fields');fields.replaceChildren();
+  set.header.forEach((heading,col)=>{const label=document.createElement('label');label.className='field';const title=document.createElement('span');txt(title,heading||`Column ${col+1}`);const value=set.rows[index][col];
+    const input=document.createElement(value.length>120?'textarea':'input');input.value=value;input.addEventListener('change',()=>{set.rows[index][col]=input.value;set.dirty=true;render()});label.append(title,input);fields.append(label)});
+  $('editor').classList.remove('hidden');
+}
+$('import').onclick=()=>$('files').click();$('files').onchange=async e=>{await imports([...e.target.files]);e.target.value=''};
+$('mobiletabs').onchange=e=>setSelected(e.target.value);
+$('export').onclick=()=>{const set=current();if(set){download(set.name,serialize(set));notify(`Exported ${set.name}. Check it in the official AnyTone CPS before use.`)}};
+$('exportAll').onclick=()=>{notify('Your browser may prompt to allow multiple downloads.');for(const set of state.sets.values())download(set.name,serialize(set))};
+$('search').oninput=e=>{state.filter=e.target.value;state.page=0;state.editIndex=null;render()};
+$('prev').onclick=()=>{state.page--;state.editIndex=null;render()};$('next').onclick=()=>{state.page++;state.editIndex=null;render()};
+$('add').onclick=()=>{const set=current();if(!set)return;set.rows.push(set.header.map(() =>''));set.dirty=true;state.filter='';$('search').value='';state.page=Math.floor((set.rows.length-1)/PAGE);render();openEditor(set.rows.length-1)};
+$('remove').onclick=()=>{const set=current();if(!set||state.editIndex===null)return;if(!confirm('Delete this record? This does not update related channel/zone/scan references.'))return;set.rows.splice(state.editIndex,1);set.dirty=true;state.editIndex=null;render();notify('Record deleted. Check dependent references before importing into CPS.')};
+$('close').onclick=()=>{state.editIndex=null;$('editor').classList.add('hidden')};
+window.addEventListener('beforeunload',e=>{if([...state.sets.values()].some(s=>s.dirty)){e.preventDefault();e.returnValue=''}});
+// RDT binary lab: makes fixed-length patches to a COPY of the input bytes.
+// Its output is not claimed to be structurally or semantically valid.
+const rdt={original:null,bytes:null,name:'',changes:[],viewOffset:0};
+function parseOffset(v){
+  const s=v.trim();if(!/^(?:0x)?[0-9a-f]+$/i.test(s))throw Error('Use a hexadecimal offset, e.g. 0x1000');
+  const n=parseInt(s.replace(/^0x/i,''),16);
+  if(!Number.isSafeInteger(n))throw Error('Offset too large');return n;
+}
+function readHex(v){let x=v.replace(/\s+/g,'');if(x.length<2||x.length%2||!/^[a-f0-9]+$/i.test(x))throw Error('Enter complete hex byte pairs');
+  const a=new Uint8Array(x.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(x.slice(2*i,2*i+2),16);return a;
+}
+function hexByte(n){return n.toString(16).padStart(2,'0').toUpperCase()}
+function hexOffset(n){return '0x'+n.toString(16).toUpperCase()}
+function rdtNavigate(n){
+ if(!rdt.bytes)throw Error('Open an .rdt first');
+ if(n<0||n>=rdt.bytes.length)throw Error('Offset is outside this file');
+ rdt.viewOffset=Math.floor(n/16)*16;const arr=rdt.bytes;let lines=[];
+ for(let offset=rdt.viewOffset;offset<Math.min(arr.length,rdt.viewOffset+16*16);offset+=16){
+   const row=arr.subarray(offset,Math.min(offset+16,arr.length));
+   const hx=Array.from(row,hexByte).join(' ').padEnd(47,' ');
+   const ascii=Array.from(row,v=>v>=32&&v<=126?String.fromCharCode(v):'.').join('');
+   lines.push(offset.toString(16).padStart(8,'0').toUpperCase()+'  '+hx+'  |'+ascii+'|');
+ }
+ $('rdtHex').textContent=lines.join('\n');$('rdtOffset').value=hexOffset(n);
+ $('rdtPatchOffset').value=hexOffset(n);$('rdtCurrent').value=hexByte(arr[n]);
+}
+function rdtSummary(){
+ if(!rdt.bytes){$('rdtMeta').textContent='No RDT opened.';return}
+ const b=rdt.bytes;const ascii=(from,to)=>Array.from(b.subarray(from,to),x=>x>=32&&x<=126?String.fromCharCode(x):'.').join('');
+ const lead=ascii(0,5),trail=ascii(b.length-5,b.length),model=ascii(9,17);
+ $('rdtMeta').textContent=`${rdt.name} | ${b.length.toLocaleString()} bytes | Marker ${lead} / ${trail} | Model ${model} | ${rdt.changes.length} patch(es). Markers are not an integrity check.`;
+ $('rdtHistory').textContent=`${rdt.changes.length} patch(es) applied. No validation of internal structure, checksums, field dependencies, or CPS compatibility.`;
+ $('rdtSave').disabled=rdt.changes.length===0;$('rdtUndo').disabled=rdt.changes.length===0;
+ $('rdtPatch').disabled=!rdt.bytes||!$('rdtAck').checked;
+}
+$('rdtOpen').onclick=()=>$('rdtFile').click();
+$('rdtFile').onchange=async e=>{
+ const f=e.target.files?.[0];if(!f)return;
+ try{
+   if(!/\.rdt$/i.test(f.name))throw Error('Choose an .rdt file');
+   if(f.size<32||f.size>100*1024*1024)throw Error('File size outside 32 bytes – 100 MB');
+   const b=new Uint8Array(await f.arrayBuffer());
+   const ascii=(i,j)=>String.fromCharCode(...b.subarray(i,j));
+   const model=ascii(9,17);
+   if(model!=='D878UVII')throw Error('File does not identify as D878UVII; no changes made');
+   if(ascii(0,5)!==ascii(b.length-5,b.length))throw Error('Header and trailer markers differ; no changes made');
+   rdt.name=f.name;rdt.original=b;rdt.bytes=b.slice();rdt.changes=[];rdt.viewOffset=0;
+   $('rdtAck').checked=false;rdtSummary();rdtNavigate(0);notify('Opened .rdt in memory. Original file is untouched.');
+ }catch(err){notify('RDT import: '+err.message)}
+ e.target.value='';
+};
+$('rdtGo').onclick=()=>{try{rdtNavigate(parseOffset($('rdtOffset').value))}catch(err){notify(err.message)}};
+$('rdtPatchOffset').oninput=()=>{try{const n=parseOffset($('rdtPatchOffset').value);$('rdtCurrent').value=rdt.bytes&&n<rdt.bytes.length?hexByte(rdt.bytes[n]):'—'}catch{$('rdtCurrent').value='—'}};
+$('rdtSearch').onclick=()=>{try{
+ const pattern=readHex($('rdtFind').value);const data=rdt.bytes;if(!data)throw Error('Open an .rdt first');
+ let start=rdt.viewOffset+1,hit=-1;
+ for(let i=start;i<=data.length-pattern.length;i++){
+   let match=true;for(let j=0;j<pattern.length;j++)if(data[i+j]!==pattern[j]){match=false;break}
+   if(match){hit=i;break}
+ }
+ if(hit<0)throw Error('Pattern not found after current offset');rdtNavigate(hit);notify('Found at '+hexOffset(hit));
+ }catch(err){notify(err.message)}};
+$('rdtAck').onchange=rdtSummary;
+$('rdtPatch').onclick=()=>{try{
+ if(!$('rdtAck').checked)throw Error('Acknowledge the binary editing warning first');
+ if(!rdt.bytes)throw Error('Open an .rdt first');
+ const offset=parseOffset($('rdtPatchOffset').value),v=readHex($('rdtNew').value);
+ if(v.length!==1)throw Error('Replacement must be exactly one byte');
+ if(offset<24||offset>=rdt.bytes.length-5)throw Error('Protected header/trailer region; editing is disabled');
+ const before=rdt.bytes[offset];if(before===v[0])throw Error('Replacement equals existing byte');
+ rdt.bytes[offset]=v[0];rdt.changes.push({offset,before,after:v[0]});rdtNavigate(offset);rdtSummary();notify(`Patched ${hexOffset(offset)}: ${hexByte(before)} → ${hexByte(v[0])}. Not validated for CPS use.`);
+ }catch(err){notify(err.message)}};
+$('rdtUndo').onclick=()=>{const p=rdt.changes.pop();if(!p)return;rdt.bytes[p.offset]=p.before;rdtNavigate(p.offset);rdtSummary();notify('Undid last patch')};
+$('rdtSave').onclick=()=>{if(!rdt.bytes||!rdt.changes.length)return;
+ if(!confirm('Download an UNVERIFIED patched RDT? Do not write it to a radio without validating in official CPS first.'))return;
+ const name=rdt.name.replace(/\.rdt$/i,'')+'_EXPERIMENTAL_PATCHED.rdt';
+ const blob=new Blob([rdt.bytes],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);
+ notify(`Exported ${name}. Original is unchanged. UNVERIFIED binary modification.`);
+};
+render();
+</script></body></html>
