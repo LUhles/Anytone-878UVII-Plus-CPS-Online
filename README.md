@@ -1,35 +1,37 @@
-# AnyTone Web CPS — v0.3 alpha (self-hosted, stateless)
+# AnyTone Web CPS v0.4 — experimental RDT channel and zone editor
 
-Static GitHub Pages website, no backend, telemetry, radio data upload, or browser persistence APIs.
+A static, privacy-first client-side web application intended for the AnyTone AT-D878UVII series. Deploy the `index.html` and `README.md` in the root of a GitHub Pages repository. There is no server, account, codeplug upload endpoint, telemetry, browser storage, or radio USB programming.
 
-## Actual RDT channel decoder
+## New in v0.4
 
-The v0.3 browser application now decodes **real channel names and receive frequencies from the binary `.rdt`**, without requiring a CSV import. This was confirmed against all **2,600** channel records in one uploaded `D878UVII` / `V1303` / `V101` RDT and the original CPS 4.00 channel CSV: exact names and RX MHz matched all records. The observed layout has a channel count at offset 456, channel records beginning at offset 460, a little-endian 32-bit RX frequency at each record start in units of 10 Hz, and a name at +46 bytes, 16-byte maximum. The record length varies with name length: `77 + name length` bytes for shorter names, 92 for 16-byte names.
+Against the supplied 14,387,405-byte `D878UVII` RDT file with `V1303` and `V101` markers, the browser successfully decoded:
 
-**Do not assume this layout works with other firmware or CPS versions.** Full-codeplug integrity, the manufacturer validation rules, checksums, and other fields are unverified.
+- 2,600 channel records, including each channel's *logical channel number* (different from the CSV row position), name, and receive frequency.
+- 53 zones, including all 2,738 zone memberships, member order, and A/B default channels. The member names were verified against the provided official CPS 4.00 CSV exports.
+- The raw second frequency field is shown as **unverified TX data**. It matches official CSV for some records but not all; it is not editable in this version.
 
-### Experimental changes
+The RDT zone manager can reorder members, replace an existing member with a channel from the same RDT (keeping total member count unchanged), and select default A/B channels. The channel editor can edit RX MHz and replace a channel name with **printable ASCII text of exactly the same character count**. All changes patch fixed-length fields in a copy held in memory, with undo and experimental RDT download.
 
-The GUI can change RX MHz in the loaded RDT copy by patching the known 4-byte binary field, keeping all other bytes intact. Exported RDTs are explicitly named `_EXPERIMENTAL_PATCHED.rdt` and must not be written to radios. The official CPS must independently validate that the file opens and retains settings before radio use. Names, TX frequencies, tones, DMR configuration, zones, scan lists and APRS **cannot** be edited from RDT in this version. The separate hex lab remains experimental.
+**Limitations:** Creating/deleting zones, adding/removing zone members, renaming zones, changing channel-name length, editing TX/DMR/APRS/tones, and direct USB programming are **not supported**. Modifying variable-length records without a verified serializer risks damaging the rest of the codeplug.
 
-### Other functions
+## Safety
 
-- Upload RDT directly from your computer, parse and page/search actual RDT channels.
-- Import/export/edit manufacturer CSV files as a separate workflow.
-- Download an experimental RDT copy. Original file never overwritten.
-- No USB communication.
+The application is an **experimental file editor**. Binary mappings are confirmed against one sample and its reference CSV exports, but modified RDTs have **not been validated by the official CPS**. Never write these exported RDTs to a radio until the relevant compatibility, integrity, and write-safety tests are completed. All downloads get the `_EXPERIMENTAL_PATCHED.rdt` suffix. Keep a known-good original backup.
 
-## Host via GitHub Pages
+The application retains codeplug bytes in temporary browser JavaScript memory. It does not use localStorage, IndexedDB, backend APIs, or service workers. JavaScript cannot guarantee secure memory erasure; exported files and OS/browser caches are separate concerns. Do not commit real radio configurations or personal contacts to a public GitHub repository.
 
-Put `index.html` and `README.md` at repository root, then enable Settings → Pages → Deploy from branch → `main` / `/(root)`. Upload **only source code**, never your real `.rdt` or contact exports.
+## Publish
 
-## Privacy notes
+1. Place `index.html` and `README.md` **at the root** of `main` in your GitHub repository.
+2. Settings → Pages → Deploy from a branch → `main` and `/(root)`.
+3. After the deployment, hard refresh the site if the older version still displays.
 
-File content is read via the browser File API and kept in temporary JavaScript memory. This application makes no outgoing requests and deliberately uses no localStorage, sessionStorage, IndexedDB, backend, telemetry, or service worker. The browser, OS, and user-selected file downloads may still leave recoverable copies or caches; absolute memory erasure cannot be guaranteed. Avoid third-party scripts, analytics and hosting modifications that add network requests.
+## Verification performed
 
-## Development and validation roadmap
+In headless Chromium, a real uploaded RDT opened and displayed 2,600 channels and 53 zones. The first zone loaded 24 matching member names. Moving a zone member, applying the patch, undoing it, changing an RX frequency and undoing it, renaming a channel with the same length and undoing it, and exporting an experimental RDT were tested without uncaught JavaScript errors. This is **not** an official CPS compatibility test.
 
-1. Validate decoding against independently generated CPS 4.00 RDT examples, including changed values.
-2. Map transmit frequency encoding, channel type, digital and analog fields, contact/group indexes, and zone structures.
-3. Add round-trip tests and CPS compatibility tests before enabling a production RDT writer.
-4. Only then investigate USB programming.
+## Next milestones
+
+1. Decode/verify TX frequency encoding and channel flags, analog/DMR settings from independently generated reference codeplugs.
+2. Develop and test a complete zone serializer to permit adding/removing member slots without corrupting other sections.
+3. Test export/import round trips in official CPS 4.00 before enabling a radio-ready export mode.

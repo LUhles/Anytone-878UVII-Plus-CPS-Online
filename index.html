@@ -1,26 +1,37 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AnyTone Web CPS — RDT Channel Editor v0.3</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AnyTone Web CPS — RDT Channel + Zone Editor v0.4</title>
 <style>
 :root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#e8eef7;background:#0d1420}*{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}.side{background:#101c2d;border-right:1px solid #29374c;padding:22px 15px}.brand{font-size:20px;font-weight:750;letter-spacing:-.5px}.sub{font-size:12px;color:#8ea1b9;margin:6px 0 24px}.group{color:#94a9bf;text-transform:uppercase;font-size:11px;letter-spacing:1.2px;margin:18px 8px 8px}.dataset{display:flex;justify-content:space-between;align-items:center;width:100%;padding:9px 10px;background:transparent;border:0;color:#c8d5e6;text-align:left;border-radius:9px;gap:7px}.dataset:hover,.dataset.active{background:#213853;color:#fff}.dataset .count{font-size:11px;color:#89d3cb}.main{min-width:0;padding:26px;max-width:1600px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}h1{font-size:26px;margin:0}h2{font-size:17px;margin:0}.muted{color:#9cb0c7}.intro{margin-top:6px;font-size:13px}.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{background:#21334b;color:#f4f8ff;border:1px solid #39516d;border-radius:9px;padding:9px 13px;font-size:13px;font-weight:600}.btn.primary{background:#30b0a0;color:#061a20;border-color:#30b0a0}.btn.danger{color:#ffc1c1}.btn:hover{filter:brightness(1.15)}.notice{border:1px solid #4e4435;background:#241e18;color:#f0d5a8;border-radius:10px;padding:12px 15px;font-size:13px;margin:20px 0}.metrics{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.metric{background:#152237;border:1px solid #283d58;border-radius:11px;min-width:125px;padding:13px 16px}.metric b{display:block;font-size:23px;margin-bottom:3px}.metric small{color:#91a8bf}.panel{border:1px solid #2b3d53;background:#121d2d;border-radius:12px;overflow:hidden}.panel-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:15px;border-bottom:1px solid #2b3d53}.search{background:#0b1522;color:white;border:1px solid #38516e;border-radius:8px;padding:10px;width:min(100%,330px)}.tablewrap{overflow:auto;max-height:480px}table{border-collapse:collapse;width:100%;font-size:12px;text-align:left}th,td{border-bottom:1px solid #25374a;padding:10px 12px;white-space:nowrap;max-width:300px;overflow:hidden;text-overflow:ellipsis}th{position:sticky;top:0;background:#203248;color:#b8c9dc;z-index:1}tbody tr{cursor:pointer}tbody tr:hover{background:#21334b}.foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:13px;color:#9fb1c5;font-size:12px}.empty{padding:50px 20px;text-align:center;color:#96a8bd}.edit{margin-top:17px;padding:18px}.editHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:13px}.field{display:flex;flex-direction:column;gap:6px;font-size:11px;color:#adbed0}.field input,.field textarea{background:#0d1725;border:1px solid #36506a;color:#e8f1fb;border-radius:7px;padding:9px;min-width:0;width:100%;font-size:12px}.field textarea{min-height:75px;resize:vertical}.hidden{display:none!important}.status{font-size:12px;color:#a9c7c3;margin:14px 0}.small{font-size:12px}.side-foot{color:#849bb2;font-size:11px;line-height:1.6;margin:24px 8px}.mobiletabs{display:none}@media(max-width:730px){.app{display:block}.side{border:0;border-bottom:1px solid #29374c;padding:14px}.side .group,.side #catalog,.side-foot{display:none}.brand{font-size:18px}.sub{margin:3px 0 0}.main{padding:13px}h1{font-size:22px}.mobiletabs{display:block;width:100%;padding:10px;background:#1b3048;color:white;border:1px solid #35506b;border-radius:8px}.metrics{gap:7px}.metric{flex:1;min-width:88px;padding:10px}.metric b{font-size:18px}}
 </style></head><body>
-<div class="app"><aside class="side"><div class="brand">◉ AnyTone Web CPS</div><div class="sub">D878UVII • RDT channel editor • alpha</div><div class="group">Imported sections</div><select id="mobiletabs" class="mobiletabs" aria-label="Choose imported section"></select><div id="catalog"></div><div class="side-foot">Local-only editing. Files remain in this browser session. Save your changes by exporting.</div></aside>
+<div class="app"><aside class="side"><div class="brand">◉ AnyTone Web CPS</div><div class="sub">D878UVII • RDT channel + zone editor • alpha</div><div class="group">Imported sections</div><select id="mobiletabs" class="mobiletabs" aria-label="Choose imported section"></select><div id="catalog"></div><div class="side-foot">Local-only editing. Files remain in this browser session. Save your changes by exporting.</div></aside>
 <main class="main"><div class="top"><div><h1 id="heading">Codeplug Workspace</h1><p class="intro muted" id="subtitle">Import CPS 4.00 CSV exports to begin editing.</p></div><div class="actions"><button class="btn primary" id="rdtOpen">Open .RDT</button><button class="btn" id="import">Import CSV files</button><button class="btn" id="export" disabled>Export current CSV</button><button class="btn" id="exportAll" disabled>Export all CSVs</button></div></div>
-<div class="notice"><strong>v0.3 RDT channel decoder:</strong> For the observed D878UVII V1303 / V101 layout, display actual channels directly from the RDT and allow experimental RX-frequency edits. The full RDT format, checksums, and CPS compatibility remain unverified. Do not write experimental RDT exports to a radio. No server-side storage or USB programming.</div>
+<div class="notice"><strong>v0.4 RDT decoder:</strong> Reads actual channels and zones directly from your D878UVII .rdt. Zone member ordering, one-for-one member replacement and default A/B selection can be experimentally edited without resizing the binary. Adding/removing members and creating zones remain disabled. Patched files are NOT validated with official CPS. Never write experimental output to a radio. No codeplug upload, persistence, or USB programming.</div>
 <div class="metrics"><div class="metric"><b id="fileCount">0</b><small>CSV sections</small></div><div class="metric"><b id="recordCount">0</b><small>Records in section</small></div><div class="metric"><b id="fieldCount">0</b><small>Fields in section</small></div><div class="metric"><b id="changeCount">0</b><small>Edited sections</small></div></div>
 <section class="panel"><div class="panel-head"><div><h2 id="tableTitle">No CSV imported</h2><div class="small muted" id="tableCaption">All original columns are retained.</div></div><div class="actions"><input type="search" id="search" class="search" placeholder="Search section..." aria-label="Search records" disabled><button class="btn" id="add" disabled>Add record</button></div></div><div class="tablewrap"><table id="table"><thead id="thead"></thead><tbody id="tbody"></tbody></table><div class="empty" id="empty">Use <strong>Import CSV files</strong> to select the AnyTone exports from your computer. You can select multiple files at once.</div></div><div class="foot"><span id="pageInfo">Nothing loaded</span><div class="actions"><button class="btn" id="prev" disabled>Previous</button><button class="btn" id="next" disabled>Next</button></div></div></section>
 <section class="panel edit hidden" id="editor"><div class="editHead"><div><h2>Edit record</h2><span class="muted small">Changes stay in memory until CSV export.</span></div><div class="actions"><button class="btn danger" id="remove">Delete record</button><button class="btn" id="close">Close editor</button></div></div><div class="fields" id="fields"></div></section>
 
 <section class="panel" id="rdtChannelPanel" style="margin-top:17px">
  <div class="panel-head"><div><h2>RDT Channels <span class="muted small">(decoded from the actual .rdt)</span></h2><div class="small muted" id="rdtChannelStats">Open your .rdt to attempt channel decoding.</div></div><input class="search" id="rdtChannelSearch" placeholder="Find channel by name or frequency" aria-label="Search decoded channels" disabled></div>
- <div class="tablewrap"><table><thead><tr><th>#</th><th>Name</th><th>RX MHz</th><th>Record offset</th><th>Action</th></tr></thead><tbody id="rdtChannelBody"></tbody></table><div class="empty" id="rdtChannelEmpty">No validated channel layout loaded.</div></div>
+ <div class="tablewrap"><table><thead><tr><th>Channel #</th><th>Name</th><th>RX MHz</th><th>TX field*</th><th>Record offset</th><th>Action</th></tr></thead><tbody id="rdtChannelBody"></tbody></table><div class="empty" id="rdtChannelEmpty">No validated channel layout loaded.</div></div>
  <div class="foot"><span id="rdtChannelPageInfo">No decoded channels</span><div class="actions"><button class="btn" id="rdtChannelPrev" disabled>Previous</button><button class="btn" id="rdtChannelNext" disabled>Next</button></div></div>
  <div id="rdtChannelEdit" class="hidden" style="padding:16px;border-top:1px solid #2b3d53">
   <h2 style="margin-bottom:7px">Edit channel receive frequency</h2>
   <p class="muted small" id="rdtEditName"></p>
-  <div class="fields"><label class="field">RX frequency (MHz)<input id="rdtEditRX" type="number" step="0.00001" min="100" max="999" /></label><label class="field" style="justify-content:end"><span>Experimental field patch</span><button id="rdtEditApply" class="btn danger">Update RX field in memory</button></label></div>
-  <p class="small muted">Only the 4-byte RX field is patched. TX, tones, color code, time slots, names, zones, and checksums are not decoded for editing. You must validate any output in the official CPS.</p>
+  <div class="fields"><label class="field">Channel name (same byte length only)<input id="rdtEditChannelName" maxlength="16" /></label><label class="field">RX frequency (MHz)<input id="rdtEditRX" type="number" step="0.00001" min="100" max="999" /></label><label class="field" style="justify-content:end"><span>Experimental field patch</span><button id="rdtEditApply" class="btn danger">Update RX field in memory</button></label></div>
+  <p class="small muted">Channel names may be replaced only with printable ASCII text of the exact same byte length. RX is patched in its known 4-byte field. TX, tones, color codes, time slots and checksums are not verified. You must validate any output in the official CPS.</p>
  </div>
 </section>
+<section class="panel" id="rdtZonePanel" style="margin-top:17px">
+ <div class="panel-head"><div><h2>RDT Zone Manager <span class="small muted">(decoded from .rdt)</span></h2><div class="small muted" id="rdtZoneStats">Open an RDT to decode zones.</div></div><input class="search" id="rdtZoneSearch" placeholder="Search zones" disabled></div>
+ <div class="fields" style="padding:15px">
+  <label class="field">Zone <select id="rdtZoneSelect" class="search" style="width:100%" disabled><option>Open an RDT first</option></select></label>
+  <label class="field">Default A channel <select id="rdtZoneA" class="search" style="width:100%" disabled></select></label>
+  <label class="field">Default B channel <select id="rdtZoneB" class="search" style="width:100%" disabled></select></label>
+ </div>
+ <p class="small muted" style="padding:0 15px">Changes remain in browser memory. Move members or replace a member with another existing channel. The zone retains its original number of members. Only choose A/B channels belonging to this zone.</p>
+ <div class="tablewrap"><table><thead><tr><th>Position</th><th>Channel #</th><th>Channel</th><th>RX MHz</th><th>Actions</th></tr></thead><tbody id="rdtZoneBody"></tbody></table><div class="empty" id="rdtZoneEmpty">No zone data loaded.</div></div>
+ <div class="foot"><span id="rdtZoneInfo">Zone editing unavailable.</span><button id="rdtZoneApply" class="btn danger" disabled>Apply zone changes in memory</button></div>
+ </section>
 <section class="panel" id="rdtPanel" style="margin-top:17px">
   <div class="panel-head"><div><h2>RDT Binary Lab <span class="muted small">(experimental)</span></h2><div class="small muted">Open a codeplug, inspect offsets, patch a byte, and save a separate copy. No radio writes.</div></div><div class="actions"><button class="btn" id="rdtUndo" disabled>Undo patch</button><button class="btn" id="rdtSave" disabled>Download patched RDT</button></div></div>
   <div style="padding:15px;display:grid;gap:12px">
@@ -113,7 +124,7 @@ $('close').onclick=()=>{state.editIndex=null;$('editor').classList.add('hidden')
 window.addEventListener('beforeunload',e=>{if([...state.sets.values()].some(s=>s.dirty)){e.preventDefault();e.returnValue=''}});
 // RDT binary lab: makes fixed-length patches to a COPY of the input bytes.
 // Its output is not claimed to be structurally or semantically valid.
-const rdt={original:null,bytes:null,name:'',changes:[],viewOffset:0,channels:[],channelPage:0,editChannel:null};
+const rdt={original:null,bytes:null,name:'',changes:[],viewOffset:0,channels:[],channelPage:0,editChannel:null,zones:[],zoneSelected:0,zoneDraft:null,zoneOffset:0};
 // Verified against a particular D878UVII V1303/V101 sample and its CPS channel CSV.
 // Not a general .rdt parser. Unknown formats are rejected, never guessed.
 const CH_START=460,CH_COUNT_AT=456,CH_PAGE=80;
@@ -122,7 +133,7 @@ function decodeChannels(bytes){
  if(str(0,5)!=='V1303'||str(19,4)!=='V101'||str(9,8)!=='D878UVII')throw Error('Unsupported RDT layout. Requires observed D878UVII V1303/V101 markers. No semantic edits permitted.');
  const dv=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),count=dv.getUint32(CH_COUNT_AT,true);
  if(count<1||count>4000)throw Error('Channel count outside validated range');
- const found=[];let at=CH_START;
+ const found=[];let at=CH_START,logicalID=0;
  for(let n=0;n<count;n++){
    if(at+92>=bytes.length)throw Error('Channel record goes outside RDT file');
    const raw=bytes.subarray(at+46,at+62);
@@ -131,8 +142,11 @@ function decodeChannels(bytes){
    const name=String.fromCharCode(...raw.subarray(0,len));
    const rxUnits=dv.getUint32(at,true),rx=rxUnits/100000;
    if(rx<100||rx>999)throw Error('Invalid RX frequency in channel '+(n+1));
-   found.push({number:n+1,name,rx,at});
-   at+=(len===16?92:77+len);
+   const txStored=dv.getUint32(at+5,true)/100000;
+   const size=len===16?92:77+len;
+   found.push({number:n+1,id:logicalID,name,rx,txStored,at,size});
+   logicalID=dv.getUint16(at+size-2,true);
+   at+=size;
  }
  // The next section begins after the final channel; all names and RX fields must be sane.
  // This alone does not prove compatibility with manufacturer CPS.
@@ -141,17 +155,17 @@ function decodeChannels(bytes){
 function refreshRdtChannels(){
  const body=$('rdtChannelBody');body.replaceChildren();const list=rdt.channels;
  $('rdtChannelSearch').disabled=!list.length;
- const term=$('rdtChannelSearch').value.toLowerCase().trim();const matches=term?list.filter(c=>c.name.toLowerCase().includes(term)||c.rx.toFixed(5).includes(term)||String(c.number)===term):list;
+ const term=$('rdtChannelSearch').value.toLowerCase().trim();const matches=term?list.filter(c=>c.name.toLowerCase().includes(term)||c.rx.toFixed(5).includes(term)||String(c.id+1)===term):list;
  const total=matches.length;rdt.channelPage=Math.min(rdt.channelPage,Math.max(0,Math.ceil(total/CH_PAGE)-1));
  const frag=document.createDocumentFragment();for(const ch of matches.slice(rdt.channelPage*CH_PAGE,(rdt.channelPage+1)*CH_PAGE)){
-  const tr=document.createElement('tr');for(const val of [ch.number,ch.name,ch.rx.toFixed(5),'0x'+ch.at.toString(16).toUpperCase()]){const td=document.createElement('td');td.textContent=String(val);tr.append(td)}
+  const tr=document.createElement('tr');for(const val of [ch.id+1,ch.name,ch.rx.toFixed(5),ch.txStored>=100&&ch.txStored<=999?ch.txStored.toFixed(5):'Special/unknown','0x'+ch.at.toString(16).toUpperCase()]){const td=document.createElement('td');td.textContent=String(val);tr.append(td)}
   const td=document.createElement('td'),button=document.createElement('button');button.className='btn';button.textContent='Edit RX';button.onclick=()=>{
-   rdt.editChannel=ch.number-1;$('rdtEditName').textContent=`Channel ${ch.number}: ${ch.name}`;$('rdtEditRX').value=ch.rx.toFixed(5);$('rdtChannelEdit').classList.remove('hidden');
+   rdt.editChannel=ch.number-1;$('rdtEditName').textContent=`Channel ${ch.number}: ${ch.name}`;$('rdtEditRX').value=ch.rx.toFixed(5);$('rdtEditChannelName').value=ch.name;$('rdtChannelEdit').classList.remove('hidden');
   };td.append(button);tr.append(td);frag.append(tr);
  }body.append(frag);
  $('rdtChannelEmpty').classList.toggle('hidden',total>0);
  if(!total)$('rdtChannelEmpty').textContent=list.length?'No matching decoded channels':'No validated channel layout loaded.';
- $('rdtChannelStats').textContent=list.length?`${list.length.toLocaleString()} verified record structures (names and RX). All other fields are unverified.`:'No decoded channel data.';
+ $('rdtChannelStats').textContent=list.length?`${list.length.toLocaleString()} decoded channel names, IDs and RX; TX shown as stored raw field (not validated).`:'No decoded channel data.';
  $('rdtChannelPageInfo').textContent=total?`${rdt.channelPage*CH_PAGE+1}–${Math.min(total,(rdt.channelPage+1)*CH_PAGE)} of ${total.toLocaleString()}`:'No channels';
  $('rdtChannelPrev').disabled=rdt.channelPage===0;$('rdtChannelNext').disabled=(rdt.channelPage+1)*CH_PAGE>=total;
 }
@@ -162,14 +176,129 @@ $('rdtEditApply').onclick=()=>{try{
  if(!rdt.bytes||rdt.editChannel===null||!rdt.channels.length)throw Error('No decoded channel selected');
  if(!$('rdtAck').checked)throw Error('Check the experimental RDT modification acknowledgment in Binary Lab before editing.');
  const ch=rdt.channels[rdt.editChannel];if(!ch)throw Error('Channel not found');
- const s=$('rdtEditRX').value.trim();if(!/^\d+(?:\.\d{1,5})?$/.test(s))throw Error('Use a MHz value with at most five decimal places');
+ const s=$('rdtEditRX').value.trim();if(!/^\d+(?:\.\d{1,5})?$/.test(s))throw Error('Use MHz with at most five decimal places');
  const n=Number(s),units=Math.round(n*100000);if(!Number.isSafeInteger(units)||n<100||n>999)throw Error('RX MHz must be 100–999');
+ const name=$('rdtEditChannelName').value;
+ if(name.length!==ch.name.length||!(/^[\x20-\x7E]+$/).test(name))throw Error(`For this version, replacement names must be printable ASCII with exactly ${ch.name.length} characters`);
  const dv=new DataView(rdt.bytes.buffer,rdt.bytes.byteOffset,rdt.bytes.byteLength),before=dv.getUint32(ch.at,true);
- if(before===units)throw Error('RX frequency is unchanged');
- const prior=new Uint8Array(4),next=new Uint8Array(4);new DataView(prior.buffer).setUint32(0,before,true);new DataView(next.buffer).setUint32(0,units,true);
- const batch='rx-'+Date.now()+'-'+ch.number;for(let j=0;j<4;j++)if(prior[j]!==next[j]){rdt.bytes[ch.at+j]=next[j];rdt.changes.push({offset:ch.at+j,before:prior[j],after:next[j],batch})}
- ch.rx=units/100000;$('rdtChannelEdit').classList.add('hidden');rdt.editChannel=null;
- refreshRdtChannels();rdtSummary();notify(`RX frequency updated for ${ch.name} in memory only. This output is NOT CPS-validated.`);
+ const updates=[];const prior=new Uint8Array(4),next=new Uint8Array(4);new DataView(prior.buffer).setUint32(0,before,true);new DataView(next.buffer).setUint32(0,units,true);
+ for(let j=0;j<4;j++)if(prior[j]!==next[j])updates.push([ch.at+j,next[j]]);
+ for(let j=0;j<name.length;j++)if(name.charCodeAt(j)!==rdt.bytes[ch.at+46+j])updates.push([ch.at+46+j,name.charCodeAt(j)]);
+ if(!updates.length)throw Error('No changes to apply');
+ const batch='channel-'+Date.now()+'-'+ch.id;
+ for(const [at,after] of updates){const existing=rdt.bytes[at];rdt.bytes[at]=after;rdt.changes.push({offset:at,before:existing,after,batch})}
+ $('rdtChannelEdit').classList.add('hidden');rdt.editChannel=null;
+ refreshAfterBinaryEdit();rdtSummary();notify(`Updated channel fields (${updates.length} bytes) in memory only. This output is NOT CPS-validated.`);
+ }catch(err){notify(err.message)}};
+
+// Zone decoder: observed 0-based channel IDs, matching each CSV "No." minus 1.
+// Every zone is a compact record: id:uint8, count:uint8, members:uint16LE[count],
+// A:uint16LE, B:uint16LE, name:NUL-terminated ASCII.
+// The zone section itself starts with uint8 count. Search after the channel section,
+// validate every channel reference against channel IDs, and require increasing zone IDs.
+function decodeZones(bytes,channels){
+ const known=new Set(channels.map(c=>c.id)), dv=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
+ const last=channels[channels.length-1];let start=last.at+last.size;
+ if(known.size!==channels.length)throw Error('Duplicate channel identifiers; cannot safely decode zones');
+ for(let pos=start;pos<Math.min(start+16384,bytes.length-20);pos++){
+  const total=bytes[pos];if(total<1||total>250)continue;
+  let at=pos+1,found=[],valid=true;
+  for(let index=0;index<total;index++){
+   if(at+8>=bytes.length||(index>0&&bytes[at]<=found[index-1].id)){valid=false;break}
+   const count=bytes[at+1],length=6+count*2;
+   if(!count||at+length>=bytes.length){valid=false;break}
+   const members=[];
+   for(let i=0;i<count;i++){const id=dv.getUint16(at+2+i*2,true);if(!known.has(id)){valid=false;break}members.push(id)}
+   if(!valid)break;
+   const a=dv.getUint16(at+2+count*2,true),b=dv.getUint16(at+4+count*2,true);
+   if(!members.includes(a)||!members.includes(b)){valid=false;break}
+   let end=at+length;
+   while(end<Math.min(at+length+17,bytes.length)&&bytes[end]!==0)end++;
+   if(end===at+length||end>=bytes.length||bytes[end]!==0){valid=false;break}
+   const raw=bytes.subarray(at+length,end);
+   if(!raw.every(c=>c>=32&&c<=126)){valid=false;break}
+   const name=String.fromCharCode(...raw);
+   found.push({id:index,name,members,a,b,at,nameOffset:at+length,end});at=end+1;
+  }
+  if(valid&&found.length===total&&at<bytes.length){return found}
+ }
+ throw Error('Zone section not confidently identified. Zone editor disabled.');
+}
+function channelByID(){return new Map(rdt.channels.map(c=>[c.id,c]))}
+function patchWords(offset,values,label){
+ if(!$('rdtAck').checked)throw Error('Check the experimental RDT modification acknowledgment in Binary Lab before editing.');
+ const buffer=new Uint8Array(values.length*2),dv=new DataView(buffer.buffer);
+ values.forEach((v,i)=>{if(!Number.isInteger(v)||v<0||v>65535)throw Error('Invalid channel ID');dv.setUint16(i*2,v,true)});
+ const batch='zone-'+Date.now()+'-'+Math.random().toString(36).slice(2);let changes=0;
+ for(let i=0;i<buffer.length;i++){
+  const at=offset+i,before=rdt.bytes[at],after=buffer[i];if(before===after)continue;
+  rdt.changes.push({offset:at,before,after,batch});rdt.bytes[at]=after;changes++;
+ }
+ if(!changes)throw Error('No changes to apply');
+ refreshAfterBinaryEdit();rdtSummary();notify(`${label} changed ${changes} byte(s) in memory. This RDT is experimental and CPS compatibility is UNVERIFIED.`);
+}
+function refreshAfterBinaryEdit(){
+ try{rdt.channels=decodeChannels(rdt.bytes);rdt.zones=decodeZones(rdt.bytes,rdt.channels)}
+ catch(err){rdt.zones=[];notify('Could not decode RDT after modification: '+err.message)}
+ refreshRdtChannels();populateZoneList(true);
+}
+function populateZoneList(preserve){
+ const select=$('rdtZoneSelect');const previous=preserve?String(rdt.zoneSelected):'0';select.replaceChildren();
+ rdt.zones.forEach((z,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=`${z.id+1}. ${z.name} (${z.members.length})`;select.append(option)});
+ rdt.zoneSelected=Math.min(Number(previous)||0,rdt.zones.length-1);if(rdt.zoneSelected<0)rdt.zoneSelected=0;
+ select.disabled=!rdt.zones.length;$('rdtZoneSearch').disabled=!rdt.zones.length;select.value=String(rdt.zoneSelected);
+ $('rdtZoneStats').textContent=rdt.zones.length?`${rdt.zones.length} zones decoded from the original RDT (fixed-length editing only)`:'Zone layout not identified';
+ showZone();
+}
+function showZone(){
+ const z=rdt.zones[rdt.zoneSelected],body=$('rdtZoneBody');body.replaceChildren();
+ $('rdtZoneEmpty').classList.toggle('hidden',!!z);
+ if(!z){$('rdtZoneA').disabled=true;$('rdtZoneB').disabled=true;$('rdtZoneApply').disabled=true;$('rdtZoneInfo').textContent='No valid zone data';return}
+ rdt.zoneDraft={members:[...z.members],a:z.a,b:z.b};renderZoneDraft();
+}
+function renderZoneDraft(){
+ const zone=rdt.zones[rdt.zoneSelected],draft=rdt.zoneDraft,chans=channelByID();if(!zone||!draft)return;
+ const tbody=$('rdtZoneBody');tbody.replaceChildren();const frag=document.createDocumentFragment();
+ draft.members.forEach((id,i)=>{
+  const ch=chans.get(id),tr=document.createElement('tr');
+  for(const value of [i+1,id+1,ch?.name??'(unknown)',ch?.rx.toFixed(5)??'—']){const td=document.createElement('td');td.textContent=String(value);tr.append(td)}
+  const td=document.createElement('td');
+  const up=document.createElement('button');up.className='btn';up.textContent='↑';up.title='Move up';up.disabled=i===0;up.onclick=()=>{[draft.members[i-1],draft.members[i]]=[draft.members[i],draft.members[i-1]];renderZoneDraft()};
+  const down=document.createElement('button');down.className='btn';down.textContent='↓';down.title='Move down';down.disabled=i===draft.members.length-1;down.onclick=()=>{[draft.members[i+1],draft.members[i]]=[draft.members[i],draft.members[i+1]];renderZoneDraft()};
+  const repl=document.createElement('button');repl.className='btn';repl.textContent='Replace';repl.title='Replace this slot with another channel (does not add members)';repl.onclick=()=>{
+   const entered=prompt('Enter replacement channel number (not row position):',String(id+1));if(entered===null)return;
+   if(!/^\d+$/.test(entered.trim())){notify('Invalid channel number');return}
+   const newID=Number(entered.trim())-1;
+   if(!chans.has(newID)){notify('Channel number not found in loaded RDT');return}
+   if(draft.members.includes(newID)&&newID!==id){notify('That channel is already in this zone');return}
+   draft.members[i]=newID;
+   if(draft.a===id&&!draft.members.includes(id))draft.a=newID;
+   if(draft.b===id&&!draft.members.includes(id))draft.b=newID;
+   renderZoneDraft();
+  };
+  td.append(up,' ',down,' ',repl);tr.append(td);frag.append(tr);
+ });tbody.append(frag);
+ for(const [id,value] of [['rdtZoneA',draft.a],['rdtZoneB',draft.b]]){
+  const select=$(id);select.replaceChildren();draft.members.forEach((chanID,i)=>{const ch=chans.get(chanID),opt=document.createElement('option');opt.value=String(chanID);opt.textContent=`${i+1}. ${ch?.name??'Unknown'} (#${chanID+1})`;select.append(opt)});
+  select.disabled=false;select.value=String(value);
+ }
+ $('rdtZoneInfo').textContent=`${zone.name}: ${draft.members.length} channel slots • default A/B selectable • no add/remove yet`;
+ $('rdtZoneApply').disabled=false;
+}
+$('rdtZoneSelect').onchange=e=>{rdt.zoneSelected=Number(e.target.value);showZone()};
+$('rdtZoneSearch').oninput=e=>{
+ const term=e.target.value.trim().toLowerCase(),select=$('rdtZoneSelect');
+ for(const opt of select.options)opt.hidden=!!term&&!opt.textContent.toLowerCase().includes(term);
+};
+$('rdtZoneA').onchange=e=>{if(rdt.zoneDraft)rdt.zoneDraft.a=Number(e.target.value)};
+$('rdtZoneB').onchange=e=>{if(rdt.zoneDraft)rdt.zoneDraft.b=Number(e.target.value)};
+$('rdtZoneApply').onclick=()=>{try{
+ const z=rdt.zones[rdt.zoneSelected],draft=rdt.zoneDraft;if(!z||!draft)throw Error('No zone selected');
+ if(draft.members.length!==z.members.length)throw Error('Adding/removing members is disabled in this version');
+ const known=channelByID();if(!draft.members.every(id=>known.has(id)))throw Error('Unknown channel reference');
+ if(new Set(draft.members).size!==draft.members.length)throw Error('Duplicate zone member');
+ if(!draft.members.includes(draft.a)||!draft.members.includes(draft.b))throw Error('Default A/B must be zone members');
+ patchWords(z.at+2,[...draft.members,draft.a,draft.b],`Zone ${z.name}`);
  }catch(err){notify(err.message)}};
 
 function parseOffset(v){
@@ -216,10 +345,11 @@ $('rdtFile').onchange=async e=>{
    if(model!=='D878UVII')throw Error('File does not identify as D878UVII; no changes made');
    if(ascii(0,5)!==ascii(b.length-5,b.length))throw Error('Header and trailer markers differ; no changes made');
    rdt.name=f.name;rdt.original=b;rdt.bytes=b.slice();rdt.changes=[];rdt.viewOffset=0;
-   rdt.channels=[];rdt.channelPage=0;rdt.editChannel=null;$('rdtChannelEdit').classList.add('hidden');$('rdtChannelSearch').value='';
+   rdt.channels=[];rdt.zones=[];rdt.zoneSelected=0;rdt.channelPage=0;rdt.editChannel=null;$('rdtChannelEdit').classList.add('hidden');$('rdtChannelSearch').value='';
    try{rdt.channels=decodeChannels(rdt.bytes);notify(`Decoded ${rdt.channels.length} RDT channels (name and RX only).`)}
    catch(decodeError){notify(`RDT opened; semantic channel decoding unavailable: ${decodeError.message}`)}
-   refreshRdtChannels();
+   if(rdt.channels.length){try{rdt.zones=decodeZones(rdt.bytes,rdt.channels)}catch(err){notify('Zone decoding unavailable: '+err.message)}}
+   refreshRdtChannels();populateZoneList(false);
    $('rdtAck').checked=false;rdtSummary();rdtNavigate(0);notify('Opened .rdt in memory. Original file is untouched.');
  }catch(err){notify('RDT import: '+err.message)}
  e.target.value='';
@@ -244,17 +374,15 @@ $('rdtPatch').onclick=()=>{try{
  if(offset<24||offset>=rdt.bytes.length-5)throw Error('Protected header/trailer region; editing is disabled');
  const before=rdt.bytes[offset];if(before===v[0])throw Error('Replacement equals existing byte');
  rdt.bytes[offset]=v[0];rdt.changes.push({offset,before,after:v[0]});
- try{rdt.channels=decodeChannels(rdt.bytes)}catch{rdt.channels=[]}
- refreshRdtChannels();rdtNavigate(offset);rdtSummary();notify(`Patched ${hexOffset(offset)}: ${hexByte(before)} → ${hexByte(v[0])}. Not validated for CPS use.`);
+ refreshAfterBinaryEdit();rdtNavigate(offset);rdtSummary();notify(`Patched ${hexOffset(offset)}: ${hexByte(before)} → ${hexByte(v[0])}. Not validated for CPS use.`);
  }catch(err){notify(err.message)}};
 $('rdtUndo').onclick=()=>{const p=rdt.changes.pop();if(!p)return;rdt.bytes[p.offset]=p.before; if(p.batch){while(rdt.changes.length&&rdt.changes[rdt.changes.length-1].batch===p.batch){const q=rdt.changes.pop();rdt.bytes[q.offset]=q.before}}rdtNavigate(p.offset);
- try {rdt.channels=decodeChannels(rdt.bytes)}catch {rdt.channels=[]}
- refreshRdtChannels();rdtSummary();notify('Undid last patch, including any multi-byte RX frequency edit')};
+ refreshAfterBinaryEdit();rdtSummary();notify('Undid last patch, including any multi-byte RX frequency edit')};
 $('rdtSave').onclick=()=>{if(!rdt.bytes||!rdt.changes.length)return;
  if(!confirm('Download an UNVERIFIED patched RDT? Do not write it to a radio without validating in official CPS first.'))return;
  const name=rdt.name.replace(/\.rdt$/i,'')+'_EXPERIMENTAL_PATCHED.rdt';
  const blob=new Blob([rdt.bytes],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);
  notify(`Exported ${name}. Original is unchanged. UNVERIFIED binary modification.`);
 };
-render();refreshRdtChannels();
+render();refreshRdtChannels();populateZoneList(false);
 </script></body></html>
